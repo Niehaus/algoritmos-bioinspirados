@@ -59,7 +59,6 @@ def RepresentacaoReal(individuo):
 	tupla = []
 	xReal = xmin + ((xmax - xmin)/(2**n -1)) * intBin(individuo.x1, n)
 	tupla.append(xReal)
-	print(xReal)
 	xReal = xmin + ((xmax - xmin)/(2**n -1)) * intBin(individuo.x2, n)
 	tupla.append(xReal)
 	print(tupla)
