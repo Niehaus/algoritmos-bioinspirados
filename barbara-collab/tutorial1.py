@@ -65,10 +65,10 @@ def RepresentacaoReal(individuo):
 
 """Considerando uma funcção de minimização"""
 def Torneio(npop, individuos_list): 
-    vpais_index = [None] *  int(npop/2)
+    vpais_index = [None] *  npop
     pv = 0.9 #Chance do pior pai vencer
     i = 0
-    while( i < int(npop/2):
+    while(i < npop):
         p1 = random.randrange(0, npop)
         p2 = random.randrange(0, npop)
         while(p1 == p2):
@@ -84,25 +84,36 @@ def Torneio(npop, individuos_list):
                 vencedor_index = p1
         vpais_index[i] = vencedor_index
         i += 1
+    print(vpais_index)
     return vpais_index
+
+def Cruzamento(npop, pm, pais):
+    index = 1
+    pop_media = []
+    while index <= len(pais):
+        print("Cruzamento entre:", pais[index - 1], "e ", pais[index])
+        index += 2
+    return pop_media
+
 
 individuos_list = []
 
 
 gen_atual = 0
+pm = 1 #probabilidade de mutação
+
 #while gen_atual < GERACAO:
-for i in range(int(POP_SIZE/2)):
+for i in range(POP_SIZE):
     individuos_list.append(Individuo(i, gen_atual, dimensao))
 
 for indv in individuos_list:
     indv.fitness = func_obj(RepresentacaoReal(indv))
 
-vencedores_torneio = Torneio(int(POP_SIZE/2), individuos_list)
-num_vencedores = len(vencedores_torneio)
-for i in range(num_vencedores):
-    print(vencedores_torneio[i]," <-> ", vencedores_torneio[(num_vencedores - 1) - i])
-    
-    
+pais_vencedores_torneio = Torneio(POP_SIZE, individuos_list)
+Cruzamento(POP_SIZE, pm, pais_vencedores_torneio)
+#for i in range(num_vencedores):
+ #   print(vencedores_torneio[i]," <-> ", vencedores_torneio[(num_vencedores - 1) - i])
+     
     
     #gen_atual += 1
 #for individuo in individuos_list:
