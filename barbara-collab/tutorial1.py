@@ -5,11 +5,9 @@ import numpy as np
 
 xmin = -2
 xmax = 2
-INDIV_SIZE = 6
+indiv_size = 6
 dimensao = 2
-POP_SIZE = 100
-GERACAO = 10
-
+npop = 10
 
 def func_obj(x):
 
@@ -28,18 +26,16 @@ def func_obj(x):
 
 """Def do individuo de dimensao x"""
 class Individuo:
-    def __init__(self, id, geracao, dimensao):
+    def __init__(self, id, geracao):
         self.id = id
         self.geracao = geracao
         self.rep_bin = []
         self.fitness = None
-        for index in range(dimensao):
-            self.rep_bin.append(GeradorIndividuo())
 
 """Gera individuo random de tamanho n"""
 def GeradorIndividuo():
     individuos_tmp = []
-    for index in range(INDIV_SIZE):
+    for index in range(indiv_size):
         escolhe = random.random()
         if escolhe > 0.5:
             individuos_tmp.append(1)
@@ -47,6 +43,14 @@ def GeradorIndividuo():
             individuos_tmp.append(0)
     return individuos_tmp
 
+"""Inicializa cada individuo e sua representacao binaria"""
+def CriaGeracaoInicial(npop, gen_atual):
+    populacao = []  
+    for i in range(npop):
+        populacao.append(Individuo(i, gen_atual))
+        for index in range(dimensao):
+            populacao[-1].rep_bin.append(GeradorIndividuo())
+    return populacao
 
 """Funções para gerar representação real do individuo
 que sera usada na func_obj gerando o fitness"""
@@ -59,12 +63,12 @@ def intBin(bin, n):
 def RepresentacaoReal(individuo):
     repReal_list = []
     for each_bin in individuo.rep_bin:
-        repReal =  xmin + ((xmax - xmin)/(2**INDIV_SIZE - 1)) * intBin(each_bin, INDIV_SIZE)    
+        repReal =  xmin + ((xmax - xmin)/(2**indiv_size - 1)) * intBin(each_bin, indiv_size)    
         repReal_list.append(repReal)
     return repReal_list
 
 """Considerando uma funcção de minimização"""
-def Torneio(npop, individuos_list): 
+def Torneio(npop, populacao): 
     vpais_index = [None] *  npop
     pv = 0.9 #Chance do pior pai vencer
     i = 0
@@ -74,7 +78,7 @@ def Torneio(npop, individuos_list):
         while(p1 == p2):
             p2 = random.randrange(0, npop)
         r = random.randrange(0, 1)
-        if individuos_list[p2].fitness > individuos_list[p1].fitness: #p1 é o melhor
+        if populacao[p2].fitness > populacao[p1].fitness: #p1 é o melhor
             vencedor_index = p1
             if r > pv:
                 vencedor_index = p2
@@ -84,38 +88,84 @@ def Torneio(npop, individuos_list):
                 vencedor_index = p1
         vpais_index[i] = vencedor_index
         i += 1
-    print(vpais_index)
     return vpais_index
 
-def Cruzamento(npop, pm, pais):
+"""Cruzamento entre dois ultimos bits dos pais"""
+def Cruzamento(gen_atual, pc, pais, individuo):
     index = 1
-    pop_media = []
+    filhos = []
+    pop_intermediaria = []
     while index <= len(pais):
-        print("Cruzamento entre:", pais[index - 1], "e ", pais[index])
+        #print("Cruzamento entre:", pais[index - 1], "e", pais[index])
+        """Cruzamento que gera filho1"""
+        for i in range(len(individuo[pais[index - 1]].rep_bin)):
+            filhos.append(individuo[pais[index - 1]].rep_bin[i][:indiv_size - 2] + individuo[pais[index]].rep_bin[i][indiv_size - 2:indiv_size + 1])  
+        #print("filho1:", filhos)
+        pop_intermediaria.append(Individuo(index - 1, gen_atual))
+        for filho in filhos:
+            pop_intermediaria[-1].rep_bin.append(filho)
+        
+        filhos = []
+        """Cruzamento que gera filho1"""
+        for i in range(len(individuo[pais[index]].rep_bin)):
+            filhos.append(individuo[pais[index]].rep_bin[i][:indiv_size - 2] + individuo[pais[index - 1]].rep_bin[i][indiv_size - 2:indiv_size + 1]) 
+        #print("filho2:", filhos)
+        pop_intermediaria.append(Individuo(index, gen_atual))
+        for filho in filhos:
+            pop_intermediaria[-1].rep_bin.append(filho)
+        filhos = []
         index += 2
-    return pop_media
+    return pop_intermediaria
+
+def MutaBit(indiv_part, pm):
+    #print("*" * 21)
+    #print("1:", indiv_part)
+    for i in range(len(indiv_part)):    
+        chance_mutar = random.random()
+        if chance_mutar < pm:
+            if indiv_part[i] == 0:
+                indiv_part[i] = 1
+            else:  
+                indiv_part[i] = 0   
+    #print("2:", indiv_part)
+
+def Mutacao(npop, pop_intermediaria, pm):
+    for indiv in pop_intermediaria:
+        for rep_bin in indiv.rep_bin:
+                MutaBit(rep_bin, pm)
+                
+def Elitismo(nelite):
+    """
+    docstring
+    """
+    pass
 
 
-individuos_list = []
-
+def ImprimePop(populacao):
+    for indiv in populacao:
+        print("Id:", indiv.id, "-> ", indiv.rep_bin)
+          
 
 gen_atual = 0
-pm = 1 #probabilidade de mutação
+pc = 1 #probabilidade de mutação
+pm = 0.1
+nelite = 0
+geracao = 10
 
-#while gen_atual < GERACAO:
-for i in range(POP_SIZE):
-    individuos_list.append(Individuo(i, gen_atual, dimensao))
 
-for indv in individuos_list:
-    indv.fitness = func_obj(RepresentacaoReal(indv))
+g = 0
+populacao = CriaGeracaoInicial(npop, g)
 
-pais_vencedores_torneio = Torneio(POP_SIZE, individuos_list)
-Cruzamento(POP_SIZE, pm, pais_vencedores_torneio)
-#for i in range(num_vencedores):
- #   print(vencedores_torneio[i]," <-> ", vencedores_torneio[(num_vencedores - 1) - i])
-     
-    
-    #gen_atual += 1
-#for individuo in individuos_list:
-    #print()
-    #print ("Id:", individuo.id,"Cod: ",individuo.rep_bin)
+while g <= geracao:
+    for indv in populacao:
+        indv.fitness = func_obj(RepresentacaoReal(indv))
+    pais_vencedores_torneio = Torneio(npop, populacao)
+    pop_intermediaria = Cruzamento(g + 1, pc, pais_vencedores_torneio, populacao)
+    #for each in pop_intermediaria:
+    #   print(each.id, each.geracao, "-> ", each.rep_bin, "\n")
+    Mutacao(npop, pop_intermediaria, pm)
+    Elitismo(nelite)
+    populacao = pop_intermediaria
+    g += 1
+
+ImprimePop(populacao)
