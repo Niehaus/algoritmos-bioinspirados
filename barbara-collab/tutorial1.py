@@ -7,7 +7,7 @@ xmin = -2
 xmax = 2
 indiv_size = 6
 dimensao = 2
-npop = 10
+npop = 100
 
 def func_obj(x):
 
@@ -30,7 +30,7 @@ class Individuo:
         self.id = id
         self.geracao = geracao
         self.rep_bin = []
-        self.fitness = None
+        self.fitness = 0
 
 """Gera individuo random de tamanho n"""
 def GeradorIndividuo():
@@ -117,9 +117,9 @@ def Cruzamento(gen_atual, pc, pais, individuo):
         index += 2
     return pop_intermediaria
 
+"""Cada bit do individuo tem 
+uma probabilidade de mudar"""
 def MutaBit(indiv_part, pm):
-    #print("*" * 21)
-    #print("1:", indiv_part)
     for i in range(len(indiv_part)):    
         chance_mutar = random.random()
         if chance_mutar < pm:
@@ -127,6 +127,8 @@ def MutaBit(indiv_part, pm):
                 indiv_part[i] = 1
             else:  
                 indiv_part[i] = 0   
+    #print("*" * 21)
+    #print("1:", indiv_part)
     #print("2:", indiv_part)
 
 def Mutacao(npop, pop_intermediaria, pm):
@@ -136,36 +138,39 @@ def Mutacao(npop, pop_intermediaria, pm):
                 
 def Elitismo(nelite):
     """
-    docstring
+    pegar na população o de menor fitness, e substituir por aleatoriamente 
+    por alguém na população intermediaria tanto cromossomo quanto fitness  
+    e printar esse cara a cada geração
     """
     pass
 
-
 def ImprimePop(populacao):
+    #cod = []
     for indiv in populacao:
-        print("Id:", indiv.id, "-> ", indiv.rep_bin)
-          
-
+        #for bins in indiv.rep_bin:
+            #cod += bins
+        print("Id:", indiv.id, "-> ", indiv.fitness)
+        #cod = []
+        
 gen_atual = 0
-pc = 1 #probabilidade de mutação
+pc = 1 #probabilidade de cruzamento
 pm = 0.1
-nelite = 0
+nelite = 1
 geracao = 10
-
 
 g = 0
 populacao = CriaGeracaoInicial(npop, g)
+for indv in populacao:
+        indv.fitness = func_obj(RepresentacaoReal(indv))
 
 while g <= geracao:
-    for indv in populacao:
-        indv.fitness = func_obj(RepresentacaoReal(indv))
     pais_vencedores_torneio = Torneio(npop, populacao)
     pop_intermediaria = Cruzamento(g + 1, pc, pais_vencedores_torneio, populacao)
-    #for each in pop_intermediaria:
-    #   print(each.id, each.geracao, "-> ", each.rep_bin, "\n")
     Mutacao(npop, pop_intermediaria, pm)
     Elitismo(nelite)
-    populacao = pop_intermediaria
+    populacao = pop_intermediaria[:]
+    for indv in populacao:
+        indv.fitness = func_obj(RepresentacaoReal(indv))
     g += 1
 
 ImprimePop(populacao)
