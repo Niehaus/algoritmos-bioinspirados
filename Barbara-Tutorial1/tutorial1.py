@@ -162,31 +162,30 @@ def ImprimePop(populacao):
         print("Id:", indiv.id, "-> ", indiv.fitness)
         #cod = []
 
-
-def PlotMe(xAxis, yAxis, xLabel, yLabel, graphTitle):
-    fig, ax = plt.subplots()
-    ax.plot(xAxis, yAxis)
-
-    ax.set(xlabel= xLabel, ylabel= yLabel,
-    title= graphTitle)
-    ax.grid()
-
-    fig.savefig("test.png")
-    plt.show()  
-
 def PlotGenGraph(avg_fitness):
     array_plot  = []
     gen_array = []
     for i in range(len(avg_fitness)):
         array_plot.append(np.mean(avg_fitness[i])) 
         gen_array.append(i)
-    PlotMe(gen_array, array_plot, 'Generation', 'Average Fitness', 'Average Fitness Over Generation')
     
+    fig, ax = plt.subplots()
+    ax.plot(gen_array, array_plot)
+
+    ax.set(xlabel='Generation', ylabel='Avarege Fitness',
+    title='Avarege Fitness over generation')
+    ax.grid()
+
+    fig.savefig("test.png")
+    plt.show()   
+        
+
+
 gen_atual = 0
 pc = 1 #probabilidade de cruzamento
 pm = 0.1
 nelite = 1
-geracao = 10
+geracao = 100
 avg_fitness = []
 gen_fitness = []
 
@@ -209,5 +208,5 @@ while g <= geracao:
     gen_fitness = []
     g += 1
 
-ImprimePop(populacao)
+#ImprimePop(populacao)
 PlotGenGraph(avg_fitness)

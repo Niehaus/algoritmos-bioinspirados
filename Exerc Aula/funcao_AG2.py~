@@ -74,7 +74,6 @@ def intBin(bin, n):
 
 valores_reais = [RepresentacaoReal(genoma) for genoma in individuos]
 fitness = [func_obj(genoma) for genoma in valores_reais]
-
 for i in range(len(individuos)):
 	setattr(individuos[i], 'representacao', valores_reais[i])
 	setattr(individuos[i], 'fitness', fitness[i])
@@ -94,7 +93,6 @@ def remove_by_id(vencedor, clone):
 
 individuos_clone = individuos.copy()
 print(individuos_clone)
-
 for i in range(15):
 	vencedor = torneio(individuos_clone)
 	print(vencedor.id)
