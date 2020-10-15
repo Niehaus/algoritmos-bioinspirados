@@ -44,11 +44,11 @@ class Individuo:
         self.fitness = 0
 
 
-"""Gera individuo random de tamanho n"""
+"""Gera individuo random de tamanho n, setar igual ao do tutorial1"""
 def GeradorIndividuo():
     individuos_tmp = []
     for index in range(dimensao):
-        individuos_tmp.append(random.random())
+        individuos_tmp.append(random.uniform(-2, 2))
     #print(individuos_tmp)
     return individuos_tmp
 
@@ -62,7 +62,7 @@ def CriaGeracaoInicial(npop, gen_atual):
 
 
 """Cria roleta a partir dos fitness invertidos, pois
-trata-se de uma função de minimização"""
+trata-se de uma função de minimização, normalizar pelo rank"""
 def CriaRoleta(populacao, roleta, fitness_total):
     fit = []
     for indv in populacao:
@@ -144,7 +144,7 @@ def Cruzamento(pais_sorteados, taxa_cruzamento, gen_atual, alpha, beta):
             #Cria filho Y'
             pop_intermediaria.append(Individuo(i + 1, gen_atual))
             pop_intermediaria[-1].rep_real = rep_real_aleatoria_y
-            d= []
+            d = []
             rep_real_aleatoria_x = []
             rep_real_aleatoria_y = []
         else: #Não houve cruzamento
@@ -158,8 +158,8 @@ def Mutacao(npop, pop_intermediaria, taxa_mutacao):
     for indv in pop_intermediaria:
         chance_mutacao = random.random() 
         if chance_mutacao <= taxa_mutacao: #Se vai haver mutação ou não
-            index_mutacao = random.randint(0, len(pop_intermediaria) - 1)
-            pop_intermediaria[index_mutacao].rep_real = GeradorIndividuo()
+            index_mutacao = random.randint(0, dimensao - 1)
+            indv.rep_real[index_mutacao] = random.random() 
 
 def Elitismo(populacao, pop_intermediaria):
     menor_fitness = 1000

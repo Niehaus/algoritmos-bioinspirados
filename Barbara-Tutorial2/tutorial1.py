@@ -151,7 +151,7 @@ def Elitismo(nelite, populacao, pop_intermed):
         if populacao[index].fitness < menor_fitness:
             menor_fitness = populacao[index].fitness
             menorf_index = index
-    indiv_aleatorio = random.randrange(0, len(populacao) -1)
+    indiv_aleatorio = random.randrange(0, len(populacao) - 1)
     pop_intermediaria[indiv_aleatorio].rep_bin = populacao[menorf_index].rep_bin
 
 def ImprimePop(populacao):
