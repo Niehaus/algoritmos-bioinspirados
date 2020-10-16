@@ -1,24 +1,24 @@
 # Instruções :D
 
-Para rodar este trabalho será preciso executar o arquivo `runme.sh`, entao talvez seja necessário dar a ele permissões, para isso utilize o comando `chmod +x runme.sh`.
-Feito isso, utilize o comando `./runme.sh` e veja a mágica acontecer!
+Para rodar este trabalho será preciso executar o arquivo `runme.sh`, entao talvez seja necessário dar a ele permissões, para isso utilize o comando `chmod +x runme.sh`.Este script deve primeiro gerar todas as entradas ao rodar `entradas.py`, em seguida cada uma das entradas será executada 12 vezes e seus resultados estarão numa pasta instanciaN, onde cada execução está salva em formato `csv`.
+
+
+Como útlimo passado o scrpit deve executar `plots.py` para gerar os gráficos referentes às execuções realizadas, os gráficos gerados são, por exemplo:
 
 ```
-#!/bin/bash
+Instância1: 
+	Taxa de Mutação = 0.01
+	Taxa de Cruzamento = 0.6
+	Tamanho da População = 25
+	Número de Gerações = 25
+``` 
+### Média e o Desvio Padrão nas Gerações (Execução: 1-6)
+![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial2/instancias/instancia1/figures/plot_all_gen_avg0.png)
 
-# Barbara - Out 2020
+### Melhores Indivíduos nas Gerações (Execução: 1-6)
+![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial2/instancias/instancia1/figures/plot_all_gen_best0.png)
 
-index=1
-echo "$(python entradas.py)"
-cat arguments.txt | while read line 
-do
-	n=1 #executa cada entrada 10x
-	while [ $n -le 12 ]
-	do
-		echo "$(python3 tutorial2.py $line $n $index)"
-		n=$(( n+1 )) #incrementa n
-	done
-	index=$(( index+1 )) #incrementa index da instancia
-done
-echo "$(python3 plots.py)"
-```
+### Melhores Indivíduos nas Gerações - Visualização de todas as 12 execuções
+![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial2/instancias/instancia1/figures/plot_cumulative.png)
+
+Enfim, utilize o comando `runme.sh` e veja a mágica acontecer!
