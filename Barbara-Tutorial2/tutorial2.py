@@ -183,16 +183,22 @@ def WriteFiles(instancia, execucao, df):
         os.chdir(folder_name)
     else: #pasta já existe, entra nela
         os.chdir(folder_name)
+    f = open("readme.txt", "+w")
+    f.write("Taxa de Mutação = " + str(taxa_mutacao) +"\nTaxa de Cruzamento = " + str(taxa_cruzamento)+
+    "\nTamanho da População = " + str(npop)+ "\nNúmero de Gerações = " + str(ngen))
     path = ""
     df.to_csv (os.path.join(path,r'execucao' + execucao +'.csv'), index = False, header=True)
 
 def GenerateDataframe(avg_fitness, melhor_da_geracao):
     avg_fitness_calculate = []
+    std_fitness_calculate = []
+    gen_array = []
     for i in range(len(avg_fitness)):
+        std_fitness_calculate.append(np.std(avg_fitness[i]))
         avg_fitness_calculate.append(np.mean(avg_fitness[i]))
-    
-    df = pd.DataFrame(list(zip(avg_fitness_calculate, melhor_da_geracao)), 
-               columns =['avg_fitness', 'best_of_gen']) 
+        gen_array.append(i)
+    df = pd.DataFrame(list(zip(gen_array,avg_fitness_calculate, std_fitness_calculate, melhor_da_geracao)), 
+               columns =['gen','avg_fitness', 'std_fitness', 'best_of_gen']) 
     WriteFiles(instancia, execucao, df)
     # print(df)
 
