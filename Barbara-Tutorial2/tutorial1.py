@@ -9,7 +9,7 @@ xmin = -2
 xmax = 2
 indiv_size = 6
 dimensao = 2
-npop = 100
+npop = 50
 
 def func_obj(x):
 
@@ -176,8 +176,8 @@ def PlotGenGraph(avg_fitness):
     title='Avarege Fitness over generation')
     ax.grid()
 
-    fig.savefig("test.png")
-    plt.show()   
+    fig.savefig("avg-fitness-tut1.png")
+       
         
 
 
