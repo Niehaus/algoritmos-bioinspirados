@@ -3,16 +3,19 @@
 # Barbara Boechat
 # Outubro 2020
 
-import sys
 import math
+import os
 import random
+import sys
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
-def print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen):
-    print("--" * 12)
+
+def print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen, execucao, instancia):
+    print("Execução: " + str(execucao), "Instancia: " + str(instancia))
     print("Taxa de Mutação = " + str(taxa_mutacao))
     print("Taxa de Cruzamento = " + str(taxa_cruzamento))
     print("Tamanho da População = " + str(npop))
@@ -121,7 +124,6 @@ def Cruzamento(pais_sorteados, taxa_cruzamento, gen_atual, alpha, beta):
     rep_real_aleatoria_x = []
     rep_real_aleatoria_y = []
     OrganizaPares(pais_sorteados)
-
     for i in range(0, len(pais_sorteados), 2):
         if i == len(pais_sorteados) - 1: break
         # print("X:", pais_sorteados[i].id, "-", "Y:", pais_sorteados[i + 1].id)  
@@ -153,7 +155,7 @@ def Cruzamento(pais_sorteados, taxa_cruzamento, gen_atual, alpha, beta):
     
     return pop_intermediaria
 
-"""Mutar toda rep_real ou só uma das dimensoes? testar mutacao para cada individuo?"""
+"""Mutar a rep_real de uma dimensão sorteada"""
 def Mutacao(npop, pop_intermediaria, taxa_mutacao):
     for indv in pop_intermediaria:
         chance_mutacao = random.random() 
@@ -169,30 +171,66 @@ def Elitismo(populacao, pop_intermediaria):
             menor_fitness = populacao[index].fitness
             menorf_index = index
     # print("melhor indv", populacao[menorf_index].fitness)
-    indiv_aleatorio = random.randint(0, len(populacao) -1)
+    indiv_aleatorio = random.randint(0, len(pop_intermediaria) - 1)
     pop_intermediaria[indiv_aleatorio] = populacao[menorf_index]
 
+
+
+def WriteFiles(instancia, execucao, df):
+    folder_name = "instancia" + instancia        
+    if not os.path.exists(folder_name): #criapasta para resultados da instancia
+        os.makedirs(folder_name)
+        os.chdir(folder_name)
+    else: #pasta já existe, entra nela
+        os.chdir(folder_name)
+    path = ""
+    df.to_csv (os.path.join(path,r'execucao' + execucao +'.csv'), index = False, header=True)
+
+def GenerateDataframe(avg_fitness, melhor_da_geracao):
+    avg_fitness_calculate = []
+    for i in range(len(avg_fitness)):
+        avg_fitness_calculate.append(np.mean(avg_fitness[i]))
+    
+    df = pd.DataFrame(list(zip(avg_fitness_calculate, melhor_da_geracao)), 
+               columns =['avg_fitness', 'best_of_gen']) 
+    WriteFiles(instancia, execucao, df)
+    # print(df)
 
 def ImprimePop(populacao):
     for indiv in populacao:
         print("Id:", indiv.id, "Gen:", indiv.geracao, "-> ", indiv.fitness)
 
+
+
+
 taxa_mutacao = float(sys.argv[1])
 taxa_cruzamento = float(sys.argv[2])
 npop = int(sys.argv[3])
 ngen = int(sys.argv[4])
+execucao = sys.argv[5]
+instancia = sys.argv[6]
 dimensao = 2
-gen_atual = 1
+gen_atual = 0
 alpha = 0.75
 beta = 0.25
 
-print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen)
+
+#variaveis p/ os plots
+avg_fitness = []
+gen_fitness = []
+melhor_da_geracao = []
+
+print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen, execucao, instancia)
 populacao = CriaGeracaoInicial(npop, gen_atual)
 for indv in populacao:
-        indv.fitness = func_obj(indv.rep_real)
+    indv.fitness = func_obj(indv.rep_real)
+    gen_fitness.append(indv.fitness)
+melhor_da_geracao.append(max(gen_fitness)) 
+avg_fitness.append(gen_fitness)
+gen_fitness = []
 
 gen_atual += 1
-while gen_atual <= ngen:
+while gen_atual < ngen:
     pais_sorteados_roleta = Roleta(npop, populacao)
     pop_intermediaria = Cruzamento(pais_sorteados_roleta, taxa_cruzamento, gen_atual, alpha, beta)
     Mutacao(npop, pop_intermediaria, taxa_mutacao)
@@ -200,9 +238,16 @@ while gen_atual <= ngen:
     populacao = pop_intermediaria[:]
     for indv in populacao:
         indv.fitness = func_obj(indv.rep_real)
+        gen_fitness.append(indv.fitness)
+    melhor_da_geracao.append(max(gen_fitness))
+    avg_fitness.append(gen_fitness)
+    gen_fitness = []
     gen_atual += 1
 
-ImprimePop(populacao)
+
+GenerateDataframe(avg_fitness, melhor_da_geracao)
+# PlotGenGraph(avg_fitness, instancia, execucao)
+# ImprimePop(populacao)
 
 
 

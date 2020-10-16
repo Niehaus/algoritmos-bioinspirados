@@ -9,7 +9,7 @@ xmin = -2
 xmax = 2
 indiv_size = 6
 dimensao = 2
-npop = 1000
+npop = 100
 
 def func_obj(x):
 
@@ -123,7 +123,7 @@ def Cruzamento(gen_atual, pc, pais, individuo):
 uma probabilidade de mudar"""
 def MutaBit(indiv_part, pm):
     for i in range(len(indiv_part)):    
-        chance_mutar = random.random()
+        chance_mutar = random.randrange(0,1)
         if chance_mutar < pm:
             if indiv_part[i] == 0:
                 indiv_part[i] = 1
