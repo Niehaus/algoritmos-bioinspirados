@@ -27,7 +27,6 @@ Enfim, utilize o comando `runme.sh` e veja a mágica acontecer!
 ## AG - Representação Binária
 Tanto o AG - Rep. Real e o de Rep. Binária neste caso possuem a mesma função objetivo, e em ambos a média de fitness nas gerações realiza uma rápida descida e não oscila muito em direção ao fitness médio inicial.
 
-
 Para os mesmos parâmetros os AGs tiveram o seguite desempenho:
 
 ```
@@ -42,4 +41,4 @@ Instância:
 ![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial2/instancias/instancia80/figures/plot_all_gen_avg0.png)
 
 ### Rep. Binária
-![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial1/Figures/Figure2-Pop1000-Gen100.png)
+![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial2/avg-fitness-tut1.png)
