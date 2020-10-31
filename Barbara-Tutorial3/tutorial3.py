@@ -8,7 +8,7 @@ import math
 import os
 import random
 import sys
-
+import stats
 
 """
 import matplotlib
@@ -22,6 +22,7 @@ def print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen, execucao, instan
     print("Taxa de Cruzamento = " + str(taxa_cruzamento))
     print("Tamanho da População = " + str(npop))
     print("Número de Gerações = " + str(ngen))
+    print('FO - Valor Ótimo: ', func_obj(pesos, pr, c, s))
     print("--" * 12)
     print("\n")
 
@@ -216,11 +217,20 @@ instancia = sys.argv[6]
 
 print_argumentos(taxa_mutacao, taxa_cruzamento, npop, ngen, execucao, instancia)
 
+
+""" Variaveis p/ os plots """
+avg_fitness = []
+gen_fitness = []
+melhor_da_geracao = []
+
 g = 0
 populacao = CriaGeracaoInicial(npop, 0, tam_mochila)
 for indv in populacao:
     indv.fitness = func_obj(pesos, pr, c, indv.rep_binaria)
-    # print(indv.geracao, indv.fitness, indv.rep_binaria)
+    gen_fitness.append(indv.fitness)
+melhor_da_geracao.append(max(gen_fitness))
+avg_fitness.append(gen_fitness)
+gen_fitness = []
 
 g += 1
 while g < ngen:
@@ -234,11 +244,12 @@ while g < ngen:
     populacao = pop_intermediaria[:]
     for indv in populacao:
         indv.fitness = func_obj(pesos, pr, c, indv.rep_binaria)
+        gen_fitness.append(indv.fitness)
+    melhor_da_geracao.append(max(gen_fitness))
+    avg_fitness.append(gen_fitness)
+    gen_fitness = []
     g += 1
-#print(populacao[0].rep_binaria, capacidade)
-# Somatorio(pesos, populacao[0].rep_binaria)
-# for indv in populacao:
-# for indv in populacao:
-    # print(indv.geracao, indv.id, indv.fitness)
-print('Ótimo: ', func_obj(pesos, pr, c, s))
+
+stats.OrganizaPasta(avg_fitness, melhor_da_geracao, pasta, instancia, execucao)
+
 
