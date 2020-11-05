@@ -26,8 +26,6 @@ Para melhor vizualização as tabelas mostram apenas até a instância 14.
 Mas também é possível visualizar qual a melhor instância e o desempenho do algoritmo para este problema levando em consideração 
 os resultados de forma mais geral.
 
-![](https://github.com/Niehaus/algoritmos-bioinspirados/blob/master/Barbara-Tutorial3/datasets/01/resultados01/plot_best_inst.png)
-
 #### O resultado ótimo para cada problema respectivamente:
 
 - FO - Valor Ótimo 01:  309
