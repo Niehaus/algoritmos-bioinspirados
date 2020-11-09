@@ -128,7 +128,7 @@ def OrganizaPares(pais_sorteados):
                     mv_indv = pais_sorteados[j]
                     pais_sorteados[j] = pais_sorteados[i + 1]
                     pais_sorteados[i + 1] = mv_indv
-                    break
+                    breakpass
 
 
 """Cruzamento entre dois ultimos bits dos pais"""
@@ -145,7 +145,8 @@ def Cruzamento(g, taxa_cruzamento, pais, tam):
             # print(pais[k + 1].id, pais[k + 1].rep_binaria)
             # print("---" * 10)
             # Gera Filho 1
-            pop_intermediaria.append(Mochila(k, g))
+            pop_intermediaria.append(Moc
+                                     hila(k, g))
             filho = pais[k].rep_binaria[:tam - 2] + \
                 pais[k + 1].rep_binaria[tam - 2:tam + 1]
             pop_intermediaria[-1].rep_binaria = filho
