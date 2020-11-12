@@ -1,4 +1,6 @@
 from ant_system import AntSystem, Ant
+import sys
+import csv
 
 
 def read_file(filepath):
@@ -16,7 +18,7 @@ def read_file(filepath):
 if __name__ == '__main__':
     global data
 
-    read_file('lau15_dist.txt')
+    read_file(sys.argv[1])
 
     alpha = 1
     beta = 5
@@ -28,7 +30,6 @@ if __name__ == '__main__':
 
     ant_pop = Ant.generate_ant_pop(data['city_number'])
     while iteration < iter_max:
-        # print('*' * 24, iteration, '*' * 27)
         for ant in ant_pop:
             ant.prepare_for_tour()
             ant_system.move(ant)
@@ -38,3 +39,8 @@ if __name__ == '__main__':
     ant_system.clear_pheromone_matrix()
     optimum, solution = ant_system.get_best_solution()
     print(f"Número de Cidades: {data['city_number']} \nSolução Ótima: {optimum}")
+
+with open('results.csv', 'a', newline='') as csvfile:
+    fieldnames = ['n_cities', 'fo']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writerow({'n_cities': data['city_number'], 'fo': optimum})

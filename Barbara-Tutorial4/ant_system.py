@@ -67,7 +67,6 @@ class AntSystem:
                     self.pheromone[i][j] *= self.evaporation_rate
 
         for ant in ant_pop:
-
             if len(ant.trail) > 1:
                 ant_contribution = self.Q / self.calculate_distance(ant.trail)
             else:
@@ -79,7 +78,6 @@ class AntSystem:
 
     def update_best_solution(self, candidate_solution):
         candidate_distance = self.calculate_distance(candidate_solution)
-        # print(self.best_solution['best_fo'], self.best_solution['best_solution'])
         if candidate_distance < self.best_solution['best_fo']:
             self.best_solution['best_fo'] = candidate_distance
             self.best_solution['best_solution'] = candidate_solution[:]
