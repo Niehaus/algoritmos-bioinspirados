@@ -105,7 +105,7 @@ celerybeat.pid
 .env
 .venv
 env/
-venv/
+Materiais da Aula/venv/
 ENV/
 env.bak/
 venv.bak/
