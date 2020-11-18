@@ -16,6 +16,22 @@ def read_file(filepath):
         data['city_number'] = len(data['dist_matrix'])
 
 
+def write_results(file):
+    if os.path.isfile(file):
+        with open(file, 'a', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writerow(
+                {'n_cities': data['city_number'], 'fo': optimum, 'iterations': iter_max,
+                 'evaporation': evaporation_rate})
+    else:
+        with open(file, 'w+', newline='') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow(
+                {'n_cities': data['city_number'], 'fo': optimum, 'iterations': iter_max,
+                 'evaporation': evaporation_rate})
+
+
 if __name__ == '__main__':
     global data
 
@@ -43,14 +59,4 @@ if __name__ == '__main__':
 
 fieldnames = ['n_cities', 'fo', 'iterations', 'evaporation']
 file = f"{sys.argv[3].replace('.txt', '')}-results.csv"
-if os.path.isfile(file):
-    with open(file, 'a', newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writerow(
-            {'n_cities': data['city_number'], 'fo': optimum, 'iterations': iter_max, 'evaporation': evaporation_rate})
-else:
-    with open(file, 'w+', newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerow(
-            {'n_cities': data['city_number'], 'fo': optimum, 'iterations': iter_max, 'evaporation': evaporation_rate})
+write_results(file)
